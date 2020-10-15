@@ -3,8 +3,7 @@ import speech_recognition as sr
 import moviepy.editor as mp
 from transcript import get_large_audio_transcription
 from argparse import ArgumentParser
-import time
-
+import os
 
 parser = ArgumentParser()
 parser.add_argument(
@@ -14,25 +13,40 @@ parser.add_argument(
     help="The video (MP4) or audio(WAV) file to process.",
     metavar="FILE",
 )
+
 # parser.add_argument(
-#     "-o",
-#     "--output",
-#     dest="output_directory",
-#     help="The output directiory where the transcript should be stored.",
-#     metavar="FOLDER",
+#     "-t",
+#     "--transcript_only",
+#     dest="transcript_only",
+#     help="If the program should generate the splitted WAV files and transcript or only transcript. If FALSE, it will assume chunks are already generated.",
+#     action=ArgumentParser.BooleanOptionalAction,
 # )
 
 args = parser.parse_args()
 
+transcript_only = True
+
 path = "audio.wav"
-clip = mp.VideoFileClip(args.input)
-clip.audio.write_audiofile(path)
+if not transcript_only:
+    print("Generating main audio file.")
+    clip = mp.VideoFileClip(args.input)
+    clip.audio.write_audiofile(path)
+
+print(
+    "Should transcript only? (will not generate audio chunks): {}".format(
+        transcript_only
+    )
+)
+
+generate_chunks = not transcript_only
 
 r = sr.Recognizer()
 
-transcript = get_large_audio_transcription(path)
+if generate_chunks is True:
+    exit
+transcript = get_large_audio_transcription(path, generate_chunks)
 
-filename = "recognized_{}.txt".format(time.strftime("%s", time.gmtime()))
+filename = "{}_transcript .txt".format(os.path.basename(args.input).replace("\\", ""))
 
 with open(filename, mode="w") as file:
     file.write(transcript)
