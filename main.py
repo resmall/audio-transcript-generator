@@ -14,14 +14,6 @@ parser.add_argument(
     metavar="FILE",
 )
 
-# parser.add_argument(
-#     "-t",
-#     "--transcript_only",
-#     dest="transcript_only",
-#     help="If the program should generate the splitted WAV files and transcript or only transcript. If FALSE, it will assume chunks are already generated.",
-#     action=ArgumentParser.BooleanOptionalAction,
-# )
-
 args = parser.parse_args()
 
 transcript_only = True
@@ -51,15 +43,3 @@ filename = "{}_transcript .txt".format(os.path.basename(args.input).replace("\\"
 with open(filename, mode="w") as file:
     file.write(transcript)
     print("ready!")
-
-# Small file
-# audio = sr.AudioFile(args.output)
-# with audio as source:
-#     audio_file = r.record(source)
-# result = r.recognize_google(audio_file)
-
-# with open("recognized.txt", mode="w") as file:
-#     file.write("Recognized Speech:")
-#     file.write("\n")
-#     file.write(result)
-#     print("ready!")
