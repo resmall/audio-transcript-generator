@@ -26,6 +26,7 @@ args = parser.parse_args()
 # Means the audio file will not be reprocessed in case you are just tweaking the params for the audio translation.
 transcript_only = False
 
+
 path = "audio.wav"
 if not transcript_only:
     print("Generating main audio file.")
