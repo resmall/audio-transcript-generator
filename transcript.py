@@ -7,7 +7,7 @@ import os
 r = sr.Recognizer()
 
 
-def get_large_audio_transcription(path):
+def get_large_audio_transcription(path, generate_chunks=True):
     """
     Splitting the large audio file into chunks
     and apply speech recognition on each of these chunks
@@ -34,7 +34,8 @@ def get_large_audio_transcription(path):
         # export audio chunk and save it in
         # the `folder_name` directory.
         chunk_filename = os.path.join(folder_name, f"chunk{i}.wav")
-        audio_chunk.export(chunk_filename, format="wav")
+        if generate_chunks:
+            audio_chunk.export(chunk_filename, format="wav")
         # recognize the chunk
         with sr.AudioFile(chunk_filename) as source:
             audio_listened = r.record(source)
