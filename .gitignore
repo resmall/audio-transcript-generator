@@ -139,4 +139,5 @@ cython_debug/
 
 # Folder where the audio chunks are stored.
 audio-chunks/
-.wav
+*.wav
+*.mp4
