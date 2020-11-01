@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
-import speech_recognition as sr
 import moviepy.editor as mp
 from transcript import get_large_audio_transcription
 from argparse import ArgumentParser
 import os
+
+
+def get_file_extension(file_path):
+    filename, file_extension = os.path.splitext(file_path)
+    return file_extension
+
+
+def is_video_file(file_path):
+    file_extension = get_file_extension(args.input)
+    print("File extension" + file_extension)
+    return True if file_extension == ".mp4" else False
+
 
 parser = ArgumentParser()
 parser.add_argument(
@@ -22,30 +33,15 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-
-# Means the audio file will not be reprocessed in case you are just tweaking the params for the audio translation.
-transcript_only = False
-
-
 path = "audio.wav"
-if not transcript_only:
-    print("Generating main audio file.")
+transcript = ""
+if is_video_file(args.input):
+    print("Is video.")
     clip = mp.VideoFileClip(args.input)
     clip.audio.write_audiofile(path)
-
-print(
-    "Should transcript only? (will not generate audio chunks): {}".format(
-        transcript_only
-    )
-)
-
-generate_chunks = not transcript_only
-
-r = sr.Recognizer()
-
-if generate_chunks is True:
-    exit
-transcript = get_large_audio_transcription(path, generate_chunks)
+    transcript = get_large_audio_transcription(path, True)
+else:
+    transcript = get_large_audio_transcription(path, False)
 
 filename = args.output
 
